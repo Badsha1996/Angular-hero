@@ -17,13 +17,16 @@ export class HeroService {
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { }
-  
+
+  //  get hero method with taping and http request 
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl).pipe(tap(_ => this.log('fetched heroes')),
         catchError(this.handleError<Hero[]>('getHeroes', []))
       );
   
   }
+
+  // FOR 404 ERROR HANDLE 
   getHeroNo404<Data>(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/?id=${id}`;
     return this.http.get<Hero[]>(url)
@@ -37,7 +40,7 @@ export class HeroService {
       );
   }
 
-
+  // GET HERO BY ID
   getHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`;
     return this.http.get<Hero>(url).pipe(
@@ -46,6 +49,7 @@ export class HeroService {
     );
   }
   
+  // SEARCH HEROS 
   searchHeroes(term: string): Observable<Hero[]> {
     if (!term.trim()) {
    
@@ -59,6 +63,7 @@ export class HeroService {
     );
   }
 
+  // ADD HERO FUNCTION 
   addHero(hero: Hero): Observable<Hero> {
     return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions).pipe(
       tap((newHero: Hero) => this.log(`added hero w/ id=${newHero.id}`)),
@@ -66,6 +71,7 @@ export class HeroService {
     );
   }
 
+  // DELETE HERO FUNCTION 
   deleteHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`;
 
@@ -75,6 +81,8 @@ export class HeroService {
     );
   }
 
+
+  // UPDATING FUNCTION 
   updateHero(hero: Hero): Observable<any> {
     return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
       tap(_ => this.log(`updated hero id=${hero.id}`)),
@@ -82,6 +90,7 @@ export class HeroService {
     );
   }
   
+  // ERROR HANDELING 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
